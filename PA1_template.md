@@ -47,7 +47,7 @@ In each level of date, there are 288 objects. Hence, making up 17568 objects in 
 
 ## What is mean total number of steps taken per day?
 
-1. Calculate the total number of steps taken per day.
+- Calculate the total number of steps taken per day.
 
 Load the "dplyr"" package. Install package if it is not available.
 
@@ -86,7 +86,7 @@ head(total_steps)
 ## 6 2012-10-06 15420
 ```
 
-2. Make a histogram for the total number of steps taken each day.
+- Make a histogram for the total number of steps taken each day.
 
 ```r
 hist.data <- total_steps$sum
@@ -96,7 +96,7 @@ hist(hist.data, main="Histogram for total number of steps taken each day",
 
 ![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
 
-3. Calculate and report the mean and median of the of the total number of steps taken per day.
+- Calculate and report the mean and median of the of the total number of steps taken per day.
 
 Calculate the mean and median for steps taken per day.
 
@@ -121,7 +121,7 @@ head(mean.median)
 
 ## What is the average daily activity pattern?
 
-1. Make a time series plot (i.e. type="l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis).
+- Make a time series plot (i.e. type="l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis).
 
 Group the data by interval using the group_by () function.
 
@@ -141,7 +141,7 @@ plot(steps.average.across.day, type="l",
 
 ![](PA1_template_files/figure-html/unnamed-chunk-10-1.png) 
 
-2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+- Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
 Find the maximum number of steps.
 
@@ -167,7 +167,7 @@ Hence, the 104<sup>th</sup> 5-minute interval has the maximum number of steps.
 
 ## Imputing missing values
 
-1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
+- Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
 
 ```r
 sum(is.na(activity$steps))
@@ -177,7 +177,7 @@ sum(is.na(activity$steps))
 ## [1] 2304
 ```
 
-2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
+- Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
 
 Load the "zoo"" package. Install package if it is not available.
 
@@ -197,7 +197,7 @@ filled.steps <- as.data.frame(na.aggregate(activity$steps, by=activity$interval)
 colnames(filled.steps) <- "filled.steps"
 ```
 
-3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
+- Create a new dataset that is equal to the original dataset but with the missing data filled in.
 
 ```r
 new.activity <- cbind(activity, filled.steps)
@@ -215,7 +215,7 @@ head(new.activity)
 ## 6    2.0943396 2012-10-01       25
 ```
 
-4. Make a histogram of the total number of steps taken each day. Calculate and report the **mean** and **median** total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputting missing data on the estimates of the total daily number of steps?
+- Make a histogram of the total number of steps taken each day. Calculate and report the **mean** and **median** total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputting missing data on the estimates of the total daily number of steps?
 
 Plot histogram for the new total number of steps taken each day
 
@@ -291,7 +291,7 @@ Similar to **mean** and **median**, the newly added data has no effect on the da
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-1. Create a new factor variable in the dataset with two levels-"weekday" and "weekend" indicating whether a given date is weekday or weekend day.
+- Create a new factor variable in the dataset with two levels-"weekday" and "weekend" indicating whether a given date is weekday or weekend day.
 
 First, create a new column with the day of the week for each date
 
@@ -330,7 +330,7 @@ head(new.activity)
 ## 6    2.0943396 2012-10-01       25 weekday
 ```
 
-2. Make a panel plot containing a time series plot (i.e. type="l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
+- Make a panel plot containing a time series plot (i.e. type="l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
 
 Group the data by day using the group_by () function
 
