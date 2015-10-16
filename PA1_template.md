@@ -222,7 +222,7 @@ Plot histogram for the new total number of steps taken each day
 ```r
 new_by_date <- group_by(new.activity, date)
 new_total_steps <- summarise(new_by_date, new.sum=sum(filled.steps, na.rm=TRUE))
-new.hist.data <- unlist(new_total_steps[,2])
+new.hist.data <- new_total_steps$new.sum
 hist(new.hist.data, main="Histogram for new total number of steps taken each day",
      xlab="steps taken each day")
 ```
@@ -235,41 +235,39 @@ Calculate the new mean and median
 new.mean.median <- summarise(new_by_date,
                              new.mean.steps=mean(filled.steps, na.rm=TRUE),
                              new.median.steps=median(filled.steps, na.rm=TRUE))
-new.mean.median
+head(new.mean.median)
 ```
 
 ```
-## Source: local data frame [61 x 3]
+## Source: local data frame [6 x 3]
 ## 
-##          date new.mean.steps new.median.steps
-## 1  2012-10-01       37.38260         34.11321
-## 2  2012-10-02        0.43750          0.00000
-## 3  2012-10-03       39.41667          0.00000
-## 4  2012-10-04       42.06944          0.00000
-## 5  2012-10-05       46.15972          0.00000
-## 6  2012-10-06       53.54167          0.00000
-## 7  2012-10-07       38.24653          0.00000
-## 8  2012-10-08       37.38260         34.11321
-## 9  2012-10-09       44.48264          0.00000
-## 10 2012-10-10       34.37500          0.00000
-## ..        ...            ...              ...
+##         date new.mean.steps new.median.steps
+## 1 2012-10-01       37.38260         34.11321
+## 2 2012-10-02        0.43750          0.00000
+## 3 2012-10-03       39.41667          0.00000
+## 4 2012-10-04       42.06944          0.00000
+## 5 2012-10-05       46.15972          0.00000
+## 6 2012-10-06       53.54167          0.00000
 ```
 
 Put the two data frames together for comparison
 
 ```r
 compare.old.new <- cbind(mean.median, new.mean.median[,c(2,3)])
+compare.old.new <- select(compare.old.new, date, 
+                          mean.steps, new.mean.steps,
+                          median.steps, new.median.steps)
 head(compare.old.new)
 ```
 
 ```
-##         date mean.steps median.steps new.mean.steps new.median.steps
-## 1 2012-10-01        NaN           NA       37.38260         34.11321
-## 2 2012-10-02    0.43750            0        0.43750          0.00000
-## 3 2012-10-03   39.41667            0       39.41667          0.00000
-## 4 2012-10-04   42.06944            0       42.06944          0.00000
-## 5 2012-10-05   46.15972            0       46.15972          0.00000
-## 6 2012-10-06   53.54167            0       53.54167          0.00000
+##         date mean.steps new.mean.steps median.steps new.median.steps
+## 1 2012-10-01        NaN       37.38260           NA         34.11321
+## 2 2012-10-02    0.43750        0.43750            0          0.00000
+## 3 2012-10-03   39.41667       39.41667            0          0.00000
+## 4 2012-10-04   42.06944       42.06944            0          0.00000
+## 5 2012-10-05   46.15972       46.15972            0          0.00000
+## 6 2012-10-06   53.54167       53.54167            0          0.00000
 ```
 
 The **mean** and **median** only differ for the first day, but are identical for the rest of the days.
@@ -334,7 +332,7 @@ head(new.activity)
 
 2. Make a panel plot containing a time series plot (i.e. type="l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
 
-Group the data by day using the group_by function
+Group the data by day using the group_by () function
 
 ```r
 by_day_interval <- group_by(new.activity, day, interval)

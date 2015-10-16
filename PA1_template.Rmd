@@ -134,7 +134,7 @@ Plot histogram for the new total number of steps taken each day
 ```{r}
 new_by_date <- group_by(new.activity, date)
 new_total_steps <- summarise(new_by_date, new.sum=sum(filled.steps, na.rm=TRUE))
-new.hist.data <- unlist(new_total_steps[,2])
+new.hist.data <- new_total_steps$new.sum
 hist(new.hist.data, main="Histogram for new total number of steps taken each day",
      xlab="steps taken each day")
 ```
@@ -144,12 +144,15 @@ Calculate the new mean and median
 new.mean.median <- summarise(new_by_date,
                              new.mean.steps=mean(filled.steps, na.rm=TRUE),
                              new.median.steps=median(filled.steps, na.rm=TRUE))
-new.mean.median
+head(new.mean.median)
 ```
 
 Put the two data frames together for comparison
 ```{r}
 compare.old.new <- cbind(mean.median, new.mean.median[,c(2,3)])
+compare.old.new <- select(compare.old.new, date, 
+                          mean.steps, new.mean.steps,
+                          median.steps, new.median.steps)
 head(compare.old.new)
 ```
 
@@ -182,7 +185,7 @@ head(new.activity)
 
 2. Make a panel plot containing a time series plot (i.e. type="l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
 
-Group the data by day using the group_by function
+Group the data by day using the group_by () function
 ```{r}
 by_day_interval <- group_by(new.activity, day, interval)
 ```
