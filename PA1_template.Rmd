@@ -98,7 +98,6 @@ Find the 5-minute interval with the maximum number of steps.
 time.interval <- which(steps.average.across.day[,2]==max.steps)
 steps.average.across.day[time.interval,]
 ```
-Hence, the `r time.interval`<sup>th</sup> 5-minute interval has the maximum number of steps.
 
 ## Imputing missing values
 

@@ -165,7 +165,6 @@ steps.average.across.day[time.interval,]
 ##   interval     mean
 ## 1      835 206.1698
 ```
-Hence, the 104<sup>th</sup> 5-minute interval has the maximum number of steps.
 
 ## Imputing missing values
 
