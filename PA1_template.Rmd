@@ -47,7 +47,7 @@ by_date <- group_by(activity, date)
 
 Calculate the total number of steps per day.
 ```{r}
-total_steps <- summarise(by_date, sum=sum(steps, na.rm=TRUE))
+total_steps <- summarise(by_date, sum=sum(steps))
 head(total_steps)
 ```
 
@@ -62,10 +62,10 @@ hist(hist.data, main="Histogram for total number of steps taken each day",
 
 Calculate the mean and median for steps taken per day.
 ```{r}
-mean.median <- summarise(by_date, 
-                         mean.steps=mean(steps, na.rm=TRUE), 
-                         median.steps=median(steps, na.rm=TRUE))
-head(mean.median)
+mean.steps <- mean(total_steps$sum, na.rm=TRUE)
+mean.steps
+median.steps <- median(total_steps$sum, na.rm=TRUE)
+median.steps
 ```
 
 ## What is the average daily activity pattern?
@@ -96,7 +96,7 @@ max.steps
 Find the 5-minute interval with the maximum number of steps.
 ```{r}
 time.interval <- which(steps.average.across.day[,2]==max.steps)
-time.interval
+steps.average.across.day[time.interval,]
 ```
 Hence, the `r time.interval`<sup>th</sup> 5-minute interval has the maximum number of steps.
 
@@ -141,28 +141,23 @@ hist(new.hist.data, main="Histogram for new total number of steps taken each day
 
 Calculate the new mean and median
 ```{r}
-new.mean.median <- summarise(new_by_date,
-                             new.mean.steps=mean(filled.steps, na.rm=TRUE),
-                             new.median.steps=median(filled.steps, na.rm=TRUE))
-head(new.mean.median)
+new.mean <- mean(new_total_steps$new.sum)
+new.mean
+new.median <- median(new_total_steps$new.sum)
+new.median
 ```
 
-Put the two data frames together for comparison
+Put the old and new mean and median together for comparison
 ```{r}
-compare.old.new <- cbind(mean.median, new.mean.median[,c(2,3)])
-compare.old.new <- select(compare.old.new, date, 
-                          mean.steps, new.mean.steps,
-                          median.steps, new.median.steps)
-head(compare.old.new)
+compare.old.new <- matrix(c(mean.steps, median.steps, new.mean, new.median),
+                          nrow=2, ncol=2, byrow=TRUE)
+rownames(compare.old.new) <- c("old", "new")
+colnames(compare.old.new) <- c("mean", "median")
+compare.old.new
 ```
 
-The **mean** and **median** only differ for the first day, but are identical for the rest of the days.
-```{r}
-compare.total <- cbind(total_steps, new_total_steps[,2])
-head(compare.total)
-```
+The **median** differs, but the **mean** is identical. Hence, imputting missing data might have an effect on the median, but not the mean of the total daily number of steps.
 
-Similar to **mean** and **median**, the newly added data has no effect on the daily total number of steps except for the first day.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 

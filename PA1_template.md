@@ -70,7 +70,7 @@ by_date <- group_by(activity, date)
 Calculate the total number of steps per day.
 
 ```r
-total_steps <- summarise(by_date, sum=sum(steps, na.rm=TRUE))
+total_steps <- summarise(by_date, sum=sum(steps))
 head(total_steps)
 ```
 
@@ -78,7 +78,7 @@ head(total_steps)
 ## Source: local data frame [6 x 2]
 ## 
 ##         date   sum
-## 1 2012-10-01     0
+## 1 2012-10-01    NA
 ## 2 2012-10-02   126
 ## 3 2012-10-03 11352
 ## 4 2012-10-04 12116
@@ -101,22 +101,21 @@ hist(hist.data, main="Histogram for total number of steps taken each day",
 Calculate the mean and median for steps taken per day.
 
 ```r
-mean.median <- summarise(by_date, 
-                         mean.steps=mean(steps, na.rm=TRUE), 
-                         median.steps=median(steps, na.rm=TRUE))
-head(mean.median)
+mean.steps <- mean(total_steps$sum, na.rm=TRUE)
+mean.steps
 ```
 
 ```
-## Source: local data frame [6 x 3]
-## 
-##         date mean.steps median.steps
-## 1 2012-10-01        NaN           NA
-## 2 2012-10-02    0.43750            0
-## 3 2012-10-03   39.41667            0
-## 4 2012-10-04   42.06944            0
-## 5 2012-10-05   46.15972            0
-## 6 2012-10-06   53.54167            0
+## [1] 10766.19
+```
+
+```r
+median.steps <- median(total_steps$sum, na.rm=TRUE)
+median.steps
+```
+
+```
+## [1] 10765
 ```
 
 ## What is the average daily activity pattern?
@@ -157,11 +156,14 @@ Find the 5-minute interval with the maximum number of steps.
 
 ```r
 time.interval <- which(steps.average.across.day[,2]==max.steps)
-time.interval
+steps.average.across.day[time.interval,]
 ```
 
 ```
-## [1] 104
+## Source: local data frame [1 x 2]
+## 
+##   interval     mean
+## 1      835 206.1698
 ```
 Hence, the 104<sup>th</sup> 5-minute interval has the maximum number of steps.
 
@@ -232,62 +234,41 @@ hist(new.hist.data, main="Histogram for new total number of steps taken each day
 Calculate the new mean and median
 
 ```r
-new.mean.median <- summarise(new_by_date,
-                             new.mean.steps=mean(filled.steps, na.rm=TRUE),
-                             new.median.steps=median(filled.steps, na.rm=TRUE))
-head(new.mean.median)
+new.mean <- mean(new_total_steps$new.sum)
+new.mean
 ```
 
 ```
-## Source: local data frame [6 x 3]
-## 
-##         date new.mean.steps new.median.steps
-## 1 2012-10-01       37.38260         34.11321
-## 2 2012-10-02        0.43750          0.00000
-## 3 2012-10-03       39.41667          0.00000
-## 4 2012-10-04       42.06944          0.00000
-## 5 2012-10-05       46.15972          0.00000
-## 6 2012-10-06       53.54167          0.00000
+## [1] 10766.19
 ```
-
-Put the two data frames together for comparison
 
 ```r
-compare.old.new <- cbind(mean.median, new.mean.median[,c(2,3)])
-compare.old.new <- select(compare.old.new, date, 
-                          mean.steps, new.mean.steps,
-                          median.steps, new.median.steps)
-head(compare.old.new)
+new.median <- median(new_total_steps$new.sum)
+new.median
 ```
 
 ```
-##         date mean.steps new.mean.steps median.steps new.median.steps
-## 1 2012-10-01        NaN       37.38260           NA         34.11321
-## 2 2012-10-02    0.43750        0.43750            0          0.00000
-## 3 2012-10-03   39.41667       39.41667            0          0.00000
-## 4 2012-10-04   42.06944       42.06944            0          0.00000
-## 5 2012-10-05   46.15972       46.15972            0          0.00000
-## 6 2012-10-06   53.54167       53.54167            0          0.00000
+## [1] 10766.19
 ```
 
-The **mean** and **median** only differ for the first day, but are identical for the rest of the days.
+Put the old and new mean and median together for comparison
 
 ```r
-compare.total <- cbind(total_steps, new_total_steps[,2])
-head(compare.total)
+compare.old.new <- matrix(c(mean.steps, median.steps, new.mean, new.median),
+                          nrow=2, ncol=2, byrow=TRUE)
+rownames(compare.old.new) <- c("old", "new")
+colnames(compare.old.new) <- c("mean", "median")
+compare.old.new
 ```
 
 ```
-##         date   sum  new.sum
-## 1 2012-10-01     0 10766.19
-## 2 2012-10-02   126   126.00
-## 3 2012-10-03 11352 11352.00
-## 4 2012-10-04 12116 12116.00
-## 5 2012-10-05 13294 13294.00
-## 6 2012-10-06 15420 15420.00
+##         mean   median
+## old 10766.19 10765.00
+## new 10766.19 10766.19
 ```
 
-Similar to **mean** and **median**, the newly added data has no effect on the daily total number of steps except for the first day.
+The **median** differs, but the **mean** is identical. Hence, imputting missing data might have an effect on the median, but not the mean of the total daily number of steps.
+
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
@@ -373,4 +354,4 @@ mtext("Number of steps", side=2, line=3, outer=TRUE)
 mtext("Interval", side=1, line=2, outer=TRUE)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-25-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-24-1.png) 
